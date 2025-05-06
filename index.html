@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FFXIV Macro Converter</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    textarea { width: 100%; height: 300px; font-family: monospace; font-size: 14px; }
+    .button-container { display: flex; justify-content: space-between; margin-top: 10px; }
+    .button-container button { flex: 1; padding: 10px; font-size: 16px; }
+    .button-container button + button { margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>FFXIV Macro Converter (EN ↔ JP Crafts & Reflect)</h1>
+  <p>Paste your macro text below and click a button to convert between English and Japanese names.</p>
+  <textarea id="macro-input" placeholder="Paste macros here..."></textarea>
+  <div class="button-container">
+    <button id="convert-btn">Convert to Japanese</button>
+    <button id="convert-en-btn">Convert to English</button>
+  </div>
+  <h2>Converted Macro</h2>
+  <textarea id="macro-output" readonly placeholder="Converted macro will appear here..."></textarea>
+
+  <script>
+    // Mapping object: English ability name → Japanese name
+    const mapping = {
+      "Basic Synthesis": "作業",
+      "Standard Synthesis": "標準作業",
+      "Advanced Synthesis": "上級作業",
+      "Rapid Synthesis": "突貫作業",
+      "Careful Synthesis": "堅実作業",
+      "Delicate Synthesis": "精密作業",
+      "Prudent Synthesis": "慎重作業",
+      "Groundwork": "下地作業",
+      "Careful Synthesis II": "模範作業Ⅱ",
+      "Prudent Synthesis II": "慎重作業Ⅱ",
+      "Basic Touch": "加工",
+      "Standard Touch": "標準加工",
+      "Advanced Touch": "上級加工",
+      "Hasty Touch": "ヘイスティタッチ",
+      "Precise Touch": "正確加工",
+      "Prudent Touch": "慎重加工",
+      "Preparatory Touch": "準備加工",
+      "Refined Touch": "精緻加工",
+      "Trained Finesse": "鍛錬仕上げ",
+      "Byregot's Blessing": "ビエルゴの祝福",
+      "Tricks of the Trade": "トリックス・オブ・ザ・トレード",
+      "Inner Quiet": "インナー・クワイエット",
+      "Observe": "オブザーブ",
+      "Innovation": "イノベーション",
+      "Great Strides": "グレートストライド",
+      "Waste Not": "倹約",
+      "Waste Not II": "長期倹約",
+      "Manipulation": "マニピュレーション",
+      "Steady Hand": "ステディハンド",
+      "Steady Hand II": "ステディハンドII",
+      "Muscle Memory": "マッスルメモリー",
+      "Final Appraisal": "最終確認",
+      "Master's Mend": "マスターズメンド",
+      "Reclaim": "リクレイム",
+      "Comfort Zone": "コンファートゾーン",
+      "Veneration": "ヴェネレーション",
+      "Immaculate Mend": "イマキュレートメンド",
+      "Reflect": "リフレクト"
+    };
+
+    // Generate reverse mapping: Japanese → English
+    const reverseMapping = {};
+    Object.entries(mapping).forEach(([en, jp]) => {
+      reverseMapping[jp] = en;
+    });
+
+    // Generic convert function for given map
+    function convertText(map) {
+      const input = document.getElementById('macro-input').value;
+      return input.replace(/\/ac\s+"([^\"]+)"|\/ac\s+(\S+)/g, (match, quotedName, simpleName) => {
+        const name = quotedName || simpleName;
+        const result = map[name];
+        if (!result) return match;
+        return quotedName ? `/ac "${result}"` : `/ac ${result}`;
+      });
+    }
+
+    document.getElementById('convert-btn').addEventListener('click', () => {
+      document.getElementById('macro-output').value = convertText(mapping);
+    });
+
+    document.getElementById('convert-en-btn').addEventListener('click', () => {
+      document.getElementById('macro-output').value = convertText(reverseMapping);
+    });
+  </script>
+</body>
+</html>
